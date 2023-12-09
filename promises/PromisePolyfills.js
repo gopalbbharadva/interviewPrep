@@ -39,7 +39,7 @@
 //   console.log(data, 'data')
 // })
 
-// PROMISE.ALL()
+// PROMISE.ALLSETTLED()
 const promiseAllSettledPollyFill = (promiseArr) => {
   const results = []
   return new Promise((res, rej) => {
