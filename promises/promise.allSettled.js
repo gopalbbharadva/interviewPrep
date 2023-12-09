@@ -22,8 +22,9 @@ const p3 = new Promise((res, rej) => {
 
 // Array with promise failed
 const scenario1 = Promise.allSettled([1, 2, Promise.reject('failed')]).then(
-  (data) => console.log(data, 'data')
+  (data) => console.log(data, 'data(((')
 )
+console.log(scenario1,'s1');
 
 // Empty array
 const scenario2 = Promise.allSettled([]).then((data) =>
