@@ -78,46 +78,68 @@
 // )
 
 // PROMISE.ANY()
+// const promiseAnyPolyfill = (promiseArr) => {
+//   let errors = []
+//   // checking for empty array case
+//   if (promiseArr.length === 0) {
+//     throw new AggregateError(errors, 'All promises were rejected')
+//   }
 
-const promiseAnyPolyfill = (promiseArr) => {
-  let errors = []
-  // checking for empty array case
-  if (promiseArr.length === 0) {
-    throw new AggregateError(errors, 'All promises were rejected')
-  }
+//   return new Promise((resolve, reject) => {
+//     promiseArr.forEach((promise) => {
+//       // if array item is non-promise value then resolve it by default
+//       if (typeof promise !== 'object') {
+//         promise = Promise.resolve(promise)
+//       }
+//       promise
+//         .then((data) => {
+//           resolve(data)
+//         })
+//         .catch((err) => {
+//           errors.push(err)
+//           if (promiseArr.length === errors.length) {
+//             reject(new AggregateError(errors, 'All promises were rejected'))
+//           }
+//         })
+//     })
+//   })
+// }
 
-  return new Promise((resolve, reject) => {
-    promiseArr.forEach((promise) => {
-      // if array item is non-promise value then resolve it by default
-      if (typeof promise !== 'object') {
-        promise = Promise.resolve(promise)
-      }
-      promise
-        .then((data) => {
-          resolve(data)
-        })
-        .catch((err) => {
-          errors.push(err)
-          if (promiseArr.length === errors.length) {
-            reject(new AggregateError(errors, 'All promises were rejected'))
-          }
-        })
-    })
-  })
-}
+// const result = promiseAnyPolyfill([
+//   // 1, 2,
+//   // Promise.resolve('promise 1'),
+//   // Promise.resolve('promise 2'),
+//   new Promise((res, rej) => setTimeout(() => res('success'), 2000)),
+//   new Promise((res, rej) => setTimeout(() => res('success2'), 1000)),
+// ])
 
-const result = promiseAnyPolyfill([
-  // 1, 2,
-  // Promise.resolve('promise 1'),
-  // Promise.resolve('promise 2'),
-  new Promise((res, rej) => setTimeout(() => res('success'), 2000)),
-  new Promise((res, rej) => setTimeout(() => res('success2'), 1000)),
-])
-
-console.log(
-  result.then((data) => console.log(data)),
-  'result'
-)
+// console.log(
+//   result.then((data) => console.log(data)),
+//   'result'
+// )
 // *******Description of promiseAnyPolyfill
 // it will wait for first promise to be fulfilled, once it's done it will simply return a promise with its data
 // if there is no any promise that will resolve then it will throw aggregate error same for empty array
+
+// PROMISE.RACE()
+
+const polyfillForRace = (promiseArr) => {
+  if (promiseArr.length === 0) return new Promise((res, rej) => res(''))
+  return new Promise((res, rej) =>
+    promiseArr.forEach((promise) => {
+      if (typeof promise !== 'object') {
+        promise = Promise.resolve(promise)
+      }
+      promise.then(
+        (data) => res(data),
+        (err) => rej(err)
+      )
+    })
+  )
+}
+
+const customPromise = polyfillForRace([Promise.reject('failure'), 2, 3])
+console.log(
+  customPromise.then((data) => console.log(data)),
+  'custom result'
+)
