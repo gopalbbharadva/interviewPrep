@@ -2,9 +2,9 @@
   "name": "interviewprep",
   "version": "1.0.0",
   "description": "",
-  "main": "binding.js",
+  "main": "JsLeetcode/composition.js",
   "scripts": {
-    "start":"nodemon binding.js",
+    "start":"nodemon JsLeetcode/composition.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
